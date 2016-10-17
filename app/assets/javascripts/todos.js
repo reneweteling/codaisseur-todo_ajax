@@ -49,17 +49,18 @@ function createTodo(title) {
   .done(function(data) {
     console.log(data);
 
-    var checkboxId = "todo-" + data.id;
+    var checkboxId = data.id;
 
     var label = $('<label></label>')
-    .attr('for', checkboxId)
-    .html(title);
+      .attr('for', checkboxId)
+      .html(title);
 
     var checkbox = $('<input type="checkbox" value="1" />')
       .attr('id', checkboxId)
       .bind('change', toggleDone);
 
     var tableRow = $('<tr class="todo"></td>')
+      .attr('data-id', checkboxId)
       .append($('<td>').append(checkbox))
       .append($('<td>').append(label));
 
@@ -75,18 +76,35 @@ function createTodo(title) {
   });
 }
 
+function cleanUpDoneTodos(event) {
+  event.preventDefault();
+
+  $.each($(".success"), function(index, tableRow) {
+    $tableRow = $(tableRow);
+    todoId = $(tableRow).data('id');
+    deleteTodo(todoId);
+  });
+}
+
+function deleteTodo(todoId) {
+  $.ajax({
+    type: "DELETE",
+    url: "/todos/" + todoId + ".json",
+    contentType: "application/json",
+    dataType: "json"})
+
+    .done(function(data) {
+      $('tr[data-id="'+todoId+'"]').remove();
+      updateCounters();
+    });
+}
+
 function submitTodo(event) {
   event.preventDefault();
   resetErrors();
   createTodo($("#todo_title").val());
   $("#todo_title").val(null);
   updateCounters();
-}
-
-function cleanUpDoneTodos(event) {
-  event.preventDefault();
-  $.when($(".success").remove())
-    .then(updateCounters);
 }
 
 function showError(message) {
