@@ -3,6 +3,31 @@ function toggleDone() {
   updateCounters();
 }
 
+function toggleDone() {
+  var checkbox = this;
+  var tableRow = $(this).parent().parent();
+
+  var todoId = tableRow.data('id');
+  var isCompleted = !tableRow.hasClass("success");
+
+  $.ajax({
+    type: "PUT",
+    url: "/todos/" + todoId + ".json",
+    data: JSON.stringify({
+      todo: { completed: isCompleted }
+    }),
+    contentType: "application/json",
+    dataType: "json"})
+
+    .done(function(data) {
+      console.log(data);
+
+      tableRow.toggleClass("success", data.completed);
+      
+      updateCounters();
+    });
+}
+
 function updateCounters() {
   $("#total-count").html($(".todo").size());
   $("#completed-count").html($(".success").size());
