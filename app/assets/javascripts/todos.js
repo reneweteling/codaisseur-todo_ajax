@@ -9,10 +9,6 @@ function updateCounters() {
   $("#todo-count").html($(".todo").size() - $(".success").size());
 }
 
-function nextTodoId() {
-  return $(".todo").size() + 1;
-}
-
 function createTodo(title) {
   var newTodo = { title: title, completed: false };
 
