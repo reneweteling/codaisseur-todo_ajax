@@ -1,0 +1,13 @@
+<!-- app/views/games/show.html.erb -->
+<%= form_for :game, url: game_path, remote: true do |f| %>
+  <%= f.submit :rock %> 
+  <%= f.submit :paper %> 
+  <%= f.submit :scissors %>
+<% end  %>
+
+<div id="game">
+
+</div>
+
+
+
